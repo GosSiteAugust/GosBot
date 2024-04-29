@@ -239,8 +239,13 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                                 callback_data: 'next_page'
                             });
                         }
-
-                        const messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
+                        const messageText = ''
+                        if (Array.isArray(pageMessages)) {
+                            messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
+                          } else {
+                            messageText = `<pre>${pageMessages}</pre>`
+                          }
+                        
 
                         if (currentMessageId) {
                             try {
