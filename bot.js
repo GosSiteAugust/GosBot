@@ -239,16 +239,8 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                                 callback_data: 'next_page'
                             });
                         }
-                        const messageText = ''
-                        if (Array.isArray(pageMessages)) {
-                            console.log(pageMessages)
-                            if(pageMessages.length > 1){
-                                messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
-                            }
-                          } else {
-                            messageText = `<pre>${pageMessages[0]}</pre>`
-                          }
-                        
+
+                        const messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
 
                         if (currentMessageId) {
                             try {
