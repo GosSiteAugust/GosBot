@@ -2,7 +2,7 @@ const axios = require('axios');
 class Server{
     async getUserData(phoneNumber){
         try {
-            const response = await axios.get(`https://gosserver3-production.up.railway.app/user/data/${phoneNumber}`);
+            const response = await axios.get(`https://gosserveraugust-production.up.railway.app/user/data/${phoneNumber}`);
             return response;
         } catch (error) {
             console.log('Ошибка при получении данных с сервера:', error.response.data);
@@ -11,7 +11,7 @@ class Server{
     }
     async getUsers(){
         try {
-            const response = await axios.get(`https://gosserver3-production.up.railway.app/user`);
+            const response = await axios.get(`https://gosserveraugust-production.up.railway.app/user`);
             return response.data;
         } catch (error) {
             console.error('Ошибка при получении данных с сервера:', error);
@@ -21,5 +21,4 @@ class Server{
 }
 
 const server = new Server();
-
 module.exports = server
