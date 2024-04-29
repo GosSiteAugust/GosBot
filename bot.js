@@ -27,7 +27,7 @@ bot.onText(/Просмотреть отработанные номера/, async
     const users = await server.getUsers();
     const userMessages = users.map((element) => {
         const user_id = `Номер ${element.ID}`;
-        return `${user_id}\n${user_login}\n${user_password}`;
+        return `${user_id}\n`;
     })
     console.log(userMessages)
     const messagesToSendusers = userMessages;
