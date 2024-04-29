@@ -241,9 +241,12 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                         }
                         const messageText = ''
                         if (Array.isArray(pageMessages)) {
-                            messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
+                            console.log(pageMessages)
+                            if(pageMessages.length > 1){
+                                messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
+                            }
                           } else {
-                            messageText = `<pre>${pageMessages}</pre>`
+                            messageText = `<pre>${pageMessages[0]}</pre>`
                           }
                         
 
