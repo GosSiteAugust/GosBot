@@ -1,5 +1,6 @@
 const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
+const { exec } = require('child_process');
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 const server = require('./requests/Server')
@@ -15,18 +16,17 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(chatId, 'Привет', main_keyboard);
 });
-
 bot.onText(/Просмотреть отработанные номера/, async (msg) => {
     const chatId = msg.chat.id;
     const options = {
-        parse_mode: 'HTML',
+        parse_mode: 'MarkdownV2',
         reply_markup: {
             remove_keyboard: false
         }
     };
     const users = await server.getUsers();
     const userMessages = users.map((element) => {
-        const user_id = `Номер ${element.ID}`;
+        const user_id = "`" + element.ID + "`"; // Изменение формата сообщения
         return `${user_id}\n`;
     })
     const messagesToSendusers = userMessages;
@@ -64,7 +64,7 @@ bot.onText(/Просмотреть отработанные номера/, async
                 });
             }
 
-            const messageText = pageMessages.map(message => `<pre>${message}</pre>`).join('\n');
+            const messageText = pageMessages.map(message => `${message}`).join('\n');
 
             if (currentMessageId) {
                 try {
@@ -95,12 +95,17 @@ bot.onText(/Просмотреть отработанные номера/, async
             } else if (query.data === 'next_page') {
                 currentPageusers = Math.min(totalPagesusers, currentPageusers + 1);
             }
+            else if (query.data.startsWith('copy:')) {
+                const numberToCopy = query.data.split(':')[1];
+                exec(`echo ${numberToCopy} | clip`);
+                bot.answerCallbackQuery(query.id, 'Номер скопирован в буфер обмена');
+            }
             sendCurrentPage();
         });
         sendCurrentPage();
     }
     else {
-        const messageText = messagesToSendusers.map(message => `<pre>${message}</pre>`).join('\n');
+        const messageText = messagesToSendusers.map(message => `${message}`).join('\n');
         bot.sendMessage(chatId, `${messageText}`, options)
     }
 });
