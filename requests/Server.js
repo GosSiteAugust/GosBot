@@ -3,7 +3,7 @@ class Server{
     async getUserData(phoneNumber){
         try {
             const response = await axios.get(`https://gosserveraugust-production.up.railway.app/user/data/${phoneNumber}`);
-            return response;
+            return response
         } catch (error) {
             console.log('Ошибка при получении данных с сервера:', error.response.data);
             return error.response
